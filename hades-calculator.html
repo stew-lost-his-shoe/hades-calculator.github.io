@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+th, td {
+  padding: 5px;
+}
+th {
+  text-align: left;
+}
+</style>
+</head>
+<h2>Hades Heat Calculator</h2>
+<body>
+
+<script>
+
+  var conditions = {
+    "hardLabor": {
+      "max": 5,
+      "heat": {
+        0:0, 1:1, 2:2, 3:3, 4:4, 5:5
+      },
+      "effect": {
+      	0:0, 1:20, 2:40, 3:60, 4:80, 5:100,
+      },
+      "current": 0,
+    },
+  	"lastingConsequences": {
+    	"max": 4,
+        "heat": {
+        	0:0, 1:1, 2:2, 3:3, 4:4
+        },
+        "effect": {
+        	0:0, 1:25, 2:50, 3:75, 4:100
+        },
+        "current":0,
+    },
+    "convenienceFee": {
+        "max": 2,
+        "heat": {0:0, 1:1, 2:2},
+        "effect": {0:0, 1:40, 2:80},
+        "current": 0,
+    },
+    "jurySummons": {
+        "max": 3,
+        "heat": {0:0, 1:1, 2:2, 3:3},
+        "effect": {0:0, 1:20, 2:40, 3:60},
+        "current": 0,
+    },
+    "extremeMeasures": {
+        "max": 4,
+        "heat": {0:0, 1:1, 2:3, 3:6, 4:10},
+        "effect": {0:0, 1:1, 2:2, 3:3, 4:4},
+        "current": 0,
+    },
+    "calisthenicsProgram": {
+        "max": 2,
+        "heat": {0:0, 1:1, 2:2},
+        "effect": {0:0, 1:15, 2:30},
+        "current": 0,
+    },
+    "benefitsPackage": {
+        "max": 2,
+        "heat": {0:0, 1:2, 2:5},
+        "effect": {0:0, 1:1, 2:2},
+        "current": 0,
+    },
+    "middleManagement": {
+        "max": 1,
+        "heat": {0:0, 1:2},
+        "effect": {0:0, 1:1},
+        "current": 0,
+    },
+    "underworldCustoms": {
+        "max": 1,
+        "heat": {0:0, 1:2},
+        "effect": {0:0, 1:1},
+        "current": 0,   
+    },
+    "forcedOvertime": {
+        "max": 2,
+        "heat": {0:0, 1:3, 2:6},
+        "effect": {0:0, 1:20, 2:40},
+        "current": 0,
+    },
+    "heightenedSecurity": {
+        "max": 1,
+        "heat": {0:0, 1:1},
+        "effect": {0:0, 1:400},
+        "current": 0
+    },
+
+  }
+
+function incrementCondition(condition, increment) {
+    if (conditions[condition]["current"] == 0 && increment == "1") {
+    	// enable the decrement button
+        document.getElementById(condition + "Decrease").disabled = false;
+    } else if (conditions[condition]["current"] == conditions[condition]["max"] && increment == "-1") {
+    	// enable the increment button
+        document.getElementById(condition + "Increase").disabled = false;
+    }
+    conditions[condition]["current"] = conditions[condition]["current"] + parseInt(increment);
+	document.getElementById(condition + "Heat").innerHTML = conditions[condition]["heat"][conditions[condition]["current"]];
+    document.getElementById(condition + "Effect").innerHTML = conditions[condition]["effect"][conditions[condition]["current"]];
+    if (conditions[condition]["max"] == conditions[condition]["current"]) {
+    	// disable the increment button
+        document.getElementById(condition + "Increase").disabled = true;
+    } else if (conditions[condition]["current"] == 0) {
+    	// disable the decrement button
+        document.getElementById(condition + "Decrease").disabled = true;
+    }
+    var currentHeat = 0;
+    for (key in conditions) {
+        currentHeat += conditions[key]["heat"][conditions[key]["current"]];
+    }
+    document.getElementById("totalHeat").innerHTML = currentHeat;
+}
+</script>
+
+<table style="width:100%">
+    <tr>
+        <th>Condition</th>
+        <th>Effect</th> 
+        <th>Heat</th>
+    </tr>
+    <tr>
+        <td> Hard Labor </td>
+        <td> Foes deal +<var id="hardLaborEffect">0</var>% damage</td>
+        <td>
+            <var id="hardLaborHeat">0</var> 
+            <button id="hardLaborIncrease" type="button" onclick="incrementCondition('hardLabor', 1)"> +1 </button>
+            <button id="hardLaborDecrease" type="button" onclick="incrementCondition('hardLabor', -1)" disabled> -1 </button>
+        </td>
+    </tr>
+
+    <tr>
+        <td> Lasting Consequences </td>
+        <td> Healing reduced by -<var id="lastingConsequencesEffect">0</var>%</td>
+        <td>
+            <var id="lastingConsequencesHeat">0</var> 
+            <button id="lastingConsequencesIncrease" type="button" onclick="incrementCondition('lastingConsequences', 1)"> +1 </button>
+            <button id="lastingConsequencesDecrease" type="button" onclick="incrementCondition('lastingConsequences', -1)" disabled> -1 </button> 
+        </td>
+    </tr>
+
+    <tr>
+        <td> Convenience Fee </td>
+        <td> All prices higher by +<var id="convenienceFeeEffect">0</var>%</td>
+        <td>
+            <var id="convenienceFeeHeat">0</var> 
+            <button id="convenienceFeeIncrease" type="button" onclick="incrementCondition('convenienceFee', 1)"> +1 </button>
+            <button id="convenienceFeeDecrease" type="button" onclick="incrementCondition('convenienceFee', -1)" disabled> -1 </button> 
+        </td>
+    </tr>
+
+    <tr>
+        <td> Jury Summons </td>
+        <td> More foes in standard encounters, by +<var id="jurySummonsEffect">0</var>%</td>
+        <td>
+            <var id="jurySummonsHeat">0</var> 
+            <button id="jurySummonsIncrease" type="button" onclick="incrementCondition('jurySummons', 1)"> +1 </button>
+            <button id="jurySummonsDecrease" type="button" onclick="incrementCondition('jurySummons', -1)" disabled> -1 </button> 
+        </td>
+    </tr>
+
+    <tr>
+        <td> Extreme Measures </td>
+        <td> More difficult boss fights, first <var id="extremeMeasuresEffect">0</var> fights</td>
+        <td>
+            <var id="extremeMeasuresHeat">0</var> 
+            <button id="extremeMeasuresIncrease" type="button" onclick="incrementCondition('extremeMeasures', 1)"> +1 </button>
+            <button id="extremeMeasuresDecrease" type="button" onclick="incrementCondition('extremeMeasures', -1)" disabled> -1 </button> 
+        </td>
+    </tr>
+
+    <tr>
+        <td> Calisthenics Program </td>
+        <td> All foes have +<var id="calisthenicsProgramEffect">0</var>% more HP</td>
+        <td>
+            <var id="calisthenicsProgramHeat">0</var> 
+            <button id="calisthenicsProgramIncrease" type="button" onclick="incrementCondition('calisthenicsProgram', 1)"> +1 </button>
+            <button id="calisthenicsProgramDecrease" type="button" onclick="incrementCondition('calisthenicsProgram', -1)" disabled> -1 </button> 
+        </td>
+    </tr>
+
+    <tr>
+        <td> Benefits Package </td>
+        <td> Most armored foes have perks, +<var id="benefitsPackageEffect">0</var> perks</td>
+        <td>
+            <var id="benefitsPackageHeat">0</var> 
+            <button id="benefitsPackageIncrease" type="button" onclick="incrementCondition('benefitsPackage', 1)"> +1 </button>
+            <button id="benefitsPackageDecrease" type="button" onclick="incrementCondition('benefitsPackage', -1)" disabled> -1 </button> 
+        </td>
+    </tr>
+
+    <tr>
+        <td> Middle Management </td>
+        <td> Each mini-boss has +<var id="middleManagementEffect">0</var> armored foes, or problems</td>
+        <td>
+            <var id="middleManagementHeat">0</var> 
+            <button id="middleManagementIncrease" type="button" onclick="incrementCondition('middleManagement', 1)"> +1 </button>
+            <button id="middleManagementDecrease" type="button" onclick="incrementCondition('middleManagement', -1)" disabled> -1 </button> 
+        </td>
+    </tr>
+
+    <tr>
+        <td> Underworld Customs </td>
+        <td> <var id="underworldCustomsEffect">0</var> boon(s) must be purged after each biome</td>
+        <td>
+            <var id="underworldCustomsHeat">0</var> 
+            <button id="underworldCustomsIncrease" type="button" onclick="incrementCondition('underworldCustoms', 1)"> +1 </button>
+            <button id="underworldCustomsDecrease" type="button" onclick="incrementCondition('underworldCustoms', -1)" disabled> -1 </button> 
+        </td>
+    </tr>
+
+    <tr>
+        <td> Forced Overtime </td>
+        <td> Foes have +<var id="forcedOvertimeEffect">0</var>% move and attack speed</td>
+        <td>
+            <var id="forcedOvertimeHeat">0</var> 
+            <button id="forcedOvertimeIncrease" type="button" onclick="incrementCondition('forcedOvertime', 1)"> +1 </button>
+            <button id="forcedOvertimeDecrease" type="button" onclick="incrementCondition('forcedOvertime', -1)" disabled> -1 </button> 
+        </td>
+    </tr>
+
+    <tr>
+        <td> Heightened Security </td>
+        <td> Traps deal +<var id="heightenedSecurityEffect">0</var>% damage</td>
+        <td>
+            <var id="heightenedSecurityHeat">0</var> 
+            <button id="heightenedSecurityIncrease" type="button" onclick="incrementCondition('heightenedSecurity', 1)"> +1 </button>
+            <button id="heightenedSecurityDecrease" type="button" onclick="incrementCondition('heightenedSecurity', -1)" disabled> -1 </button> 
+        </td>
+    </tr>
+
+
+</table>
+
+<p>Total Heat: <var id="totalHeat">0</var></p>
+
+</body>
+</html>
